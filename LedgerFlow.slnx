@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LedgerFlow.Api/LedgerFlow.Api.csproj" />
+    <Project Path="src/LedgerFlow.Application/LedgerFlow.Application.csproj" />
+    <Project Path="src/LedgerFlow.Domain/LedgerFlow.Domain.csproj" />
+    <Project Path="src/LedgerFlow.Infrastructure/LedgerFlow.Infrastructure.csproj" />
+    <Project Path="src/LedgerFlow.Migrations.Oracle/LedgerFlow.Migrations.Oracle.csproj" />
+    <Project Path="src/LedgerFlow.Migrations.SqlServer/LedgerFlow.Migrations.SqlServer.csproj" />
+    <Project Path="src/LedgerFlow.Processor/LedgerFlow.Processor.csproj" />
+    <Project Path="src/LedgerFlow.Risk/LedgerFlow.Risk.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LedgerFlow.Api.IntegrationTests/LedgerFlow.Api.IntegrationTests.csproj" />
+    <Project Path="tests/LedgerFlow.ArchitectureTests/LedgerFlow.ArchitectureTests.csproj" />
+    <Project Path="tests/LedgerFlow.Domain.UnitTests/LedgerFlow.Domain.UnitTests.csproj" />
+    <Project Path="tests/LedgerFlow.Infrastructure.IntegrationTests/LedgerFlow.Infrastructure.IntegrationTests.csproj" />
+    <Project Path="tests/LedgerFlow.Risk.Tests/LedgerFlow.Risk.Tests.csproj" />
+  </Folder>
+</Solution>

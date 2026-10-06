@@ -1,0 +1,31 @@
+# Overlay: same topology on Oracle Database 23ai Free.
+#   docker compose -f docker-compose.yml -f docker-compose.oracle.yml up --build
+
+x-oracle: &oracle-database
+  Database__Provider: Oracle
+  Database__ConnectionString: User Id=ledgerflow;Password=ledgerflow;Data Source=oracle:1521/FREEPDB1
+
+services:
+  oracle:
+    image: gvenzl/oracle-free:23-slim-faststart
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD:-LedgerFlow_Dev_2026}
+      APP_USER: ledgerflow
+      APP_USER_PASSWORD: ledgerflow
+    ports: ["1521:1521"]
+    healthcheck:
+      test: healthcheck.sh
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  migrator:
+    environment: *oracle-database
+    depends_on: !override
+      oracle: { condition: service_healthy }
+
+  api:
+    environment: *oracle-database
+
+  processor:
+    environment: *oracle-database

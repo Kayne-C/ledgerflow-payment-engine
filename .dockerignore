@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+tests/
+docs/
+BLL/
+DAL/
+ENTITIES/
+MAP/
+Medium/

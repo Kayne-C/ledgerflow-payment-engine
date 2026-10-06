@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore LedgerFlow.slnx
+
+      - name: Build (warnings are errors)
+        run: dotnet build LedgerFlow.slnx -c Release --no-restore
+
+      # Docker is available on GitHub-hosted runners, so the SQL Server tests run against a real
+      # SQL Server 2022 container (Testcontainers) instead of being skipped.
+      - name: Test (unit, architecture, gRPC, API + SQL Server integration)
+        run: dotnet test --solution LedgerFlow.slnx -c Release --no-build
+
+      - name: EF Core migrations match the model (SQL Server + Oracle)
+        run: |
+          dotnet tool install --global dotnet-ef --version 10.0.12
+          for provider in SqlServer Oracle; do
+            dotnet ef migrations has-pending-model-changes \
+              --project src/LedgerFlow.Migrations.$provider \
+              --startup-project src/LedgerFlow.Migrations.$provider \
+              --configuration Release --no-build
+          done
+
+  containers:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    strategy:
+      matrix:
+        include:
+          - { project: Api, image: ledgerflow-api }
+          - { project: Processor, image: ledgerflow-processor }
+          - { project: Risk, image: ledgerflow-risk }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build ${{ matrix.image }} image
+        run: docker build -f src/LedgerFlow.${{ matrix.project }}/Dockerfile -t ${{ matrix.image }}:${{ github.sha }} .

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LedgerFlow.Api\LedgerFlow.Api.csproj" />
+  </ItemGroup>
+
+</Project>
