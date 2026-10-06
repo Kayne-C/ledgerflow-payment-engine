@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "LedgerFlow.Contracts.Risk";
+
+package ledgerflow.risk.v1;
+
+// Synchronous fraud/risk decision for one payment. Called by the payment saga after funds are reserved.
+service RiskEngine {
+  rpc Assess (AssessRequest) returns (AssessReply);
+}
+
+message AssessRequest {
+  string payment_id = 1;
+  string from_account_id = 2;
+  string to_account_id = 3;
+  int64 amount_minor = 4;
+  string currency = 5;
+}
+
+message AssessReply {
+  bool approved = 1;
+  // 0 (no risk) .. 100 (certain fraud)
+  int32 score = 2;
+  string reason = 3;
+  repeated string triggered_rules = 4;
+}
